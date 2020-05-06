@@ -2,11 +2,18 @@ name: push_todays_news
 
 on:
   schedule:
-    - cron: '40 10 * * *'
+    - cron: '0 11 * * *'
 
 jobs:
   push_news:
     runs-on: ubuntu-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome:3.141.59-vanadium
+        ports:
+          - 4444:4444
+        volumes:
+          - /dev/shm:/dev/shm
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby 2.7

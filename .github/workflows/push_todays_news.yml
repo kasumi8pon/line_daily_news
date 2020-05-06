@@ -1,0 +1,26 @@
+name: push_todays_news
+
+on:
+  schedule:
+    - cron: '40 10 * * *'
+
+jobs:
+  push_news:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby 2.7
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.7.x
+    - name: Build
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+    - name: Execute Rake task
+      run:
+        bundle exec rake push_todays_news
+      env:
+        CHANNEL_SECRET: ${{ secrets.CHANNEL_SECRET }}
+        CHANNEL_TOKEN: ${{ secrets.CHANNEL_TOKEN }}
+        ROOM_ID: ${{ secrets.ROOM_ID }}
